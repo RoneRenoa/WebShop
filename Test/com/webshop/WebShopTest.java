@@ -1,6 +1,6 @@
 package com.webshop;
 
-import com.webshop.dataloader.ProductLoaderFromEnum;
+import com.webshop.dataloader.ProductLoaderFromFile;
 import com.webshop.webshop.Order;
 import com.webshop.webshop.Product;
 import com.webshop.webshop.User;
@@ -18,7 +18,7 @@ class WebShopTest {
 
     @BeforeEach
     void setUp() {
-        webshop = new WebShop(new ProductLoaderFromEnum());
+        webshop = new WebShop(new ProductLoaderFromFile("products.txt").loadData());
     }
 
     @Test
@@ -65,7 +65,7 @@ class WebShopTest {
 
     @Test
     void findUserNotLogged() {
-        User user = webshop.getUserByName("Magu");
+        User user = webshop.getLoggedUserByName("Magu");
         assertEquals(null, user);
     }
 
@@ -73,11 +73,11 @@ class WebShopTest {
     void findUserLogged() {
         webshop.registerUser("Magu");
         webshop.loginUser("Magu");
-        User user = webshop.getUserByName("Magu");
+        User user = webshop.getLoggedUserByName("Magu");
         user.getCart().addProductToCart(new Product("Szőnyeg", 3000));
         webshop.pay("Magu");
         webshop.logoutUser("Magu");
-        User userAfterLogout = webshop.getUserByName("Magu");
+        User userAfterLogout = webshop.getLoggedUserByName("Magu");
         assertEquals(null, userAfterLogout);
     }
 
@@ -85,11 +85,11 @@ class WebShopTest {
     void getOrderAfterLogout(){
         webshop.registerUser("Magu");
         webshop.loginUser("Magu");
-        User user = webshop.getUserByName("Magu");
+        User user = webshop.getLoggedUserByName("Magu");
         user.getCart().addProductToCart(new Product("Szőnyeg", 3000));
         webshop.pay("Magu");
         webshop.logoutUser("Magu");
-        webshop.getUserByName("Magu");
+        webshop.getLoggedUserByName("Magu");
         List<Order> orders = webshop.getPreviousOrders("Magu");
         assertTrue(orders.isEmpty());
     }

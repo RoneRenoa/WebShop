@@ -2,14 +2,14 @@ package com.webshop.webshop;
 
 import com.webshop.webshop.interfaces.WebShopItem;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Order {
-    private List<WebShopItem> previousProducts = new ArrayList<>();
+    private Map<WebShopItem, Integer> previousProducts = new LinkedHashMap<>();
     private int userId;
 
-    public List<WebShopItem> getPreviousProducts() {
+    public Map<WebShopItem, Integer> getPreviousProducts() {
         return previousProducts;
     }
 
@@ -17,16 +17,16 @@ public class Order {
         return userId;
     }
 
-    public Order(List<WebShopItem> previousProducts, int userId) {
-        this.previousProducts.addAll(previousProducts);
+    public Order(Map<WebShopItem, Integer> previousProducts, int userId) {
+        this.previousProducts.putAll(previousProducts);
         this.userId = userId;
     }
 
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder("Korábbi rendelések:\n");
-        for (WebShopItem products : previousProducts) {
-            result.append(" " + products + "\n");
+        for (Map.Entry entry : previousProducts.entrySet()) {
+            result.append("\t" + entry.getKey() + "\t" + entry.getValue() + " db\n");
         }
         return result.toString();
     }

@@ -1,6 +1,5 @@
 package com.webshop.webshop;
 
-import com.webshop.dataloader.interfaces.DataLoader;
 import com.webshop.webshop.interfaces.WebShopItem;
 
 import java.util.*;
@@ -8,11 +7,11 @@ import java.util.*;
 public class WebShop {
     private final Set<User> registeredUsers = new HashSet<>();
     private final Set<User> loginUser = new HashSet<>();
-    private final List<WebShopItem> availableProducts;
+    private final Map<WebShopItem, Integer> availableProducts;
     private final List<Order> orders = new ArrayList<>();
 
-    public WebShop(DataLoader availableProducts) {
-        this.availableProducts = availableProducts.loadData();
+    public WebShop(Map<WebShopItem, Integer> availableProducts) {
+        this.availableProducts = availableProducts;
     }
 
     public boolean registerUser(String name) {
@@ -60,7 +59,7 @@ public class WebShop {
         return success;
     }
 
-    public User getUserByName(String name) {
+    public User getLoggedUserByName(String name) {
         User user = null;
         for (User find : loginUser) {
             if (find.getName().equals(name)) {
@@ -71,12 +70,23 @@ public class WebShop {
         return user;
     }
 
+    public User getRegisteredUserByName(String name) {
+        User user = null;
+        for (User find : registeredUsers) {
+            if (find.getName().equals(name)) {
+                user = find;
+                break;
+            }
+        }
+        return user;
+    }
+
     public List<Order> getPreviousOrders(String name) {
         List<Order> userPreviousOrders = new ArrayList<>();
-        User findUser = getUserByName(name);
+        User findUser = getLoggedUserByName(name);
         if (findUser != null) {
-            for(Order storedOrder : orders){
-                if(storedOrder.getUserId() == findUser.getUserId()){
+            for (Order storedOrder : orders) {
+                if (storedOrder.getUserId() == findUser.getUserId()) {
                     userPreviousOrders.add(storedOrder);
                 }
             }
@@ -84,15 +94,33 @@ public class WebShop {
         return userPreviousOrders;
     }
 
-    public void pay(String name){
-        User user = getUserByName(name);
-        if(user != null){
+    public void pay(String name) {
+        User user = getLoggedUserByName(name);
+        if (user != null) {
             Order order = user.getCart().pay(user.getUserId());
             orders.add(order);
         }
     }
 
-    public List<WebShopItem> getAvailableProducts(){
-        return Collections.unmodifiableList(availableProducts);
+    public boolean removeItemFromCustomerCart(WebShopItem item) {
+        if (availableProducts.containsKey(item)) {
+            availableProducts.put(item, availableProducts.get(item) + 1);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean addItemToCustomerCart(WebShopItem item) {
+        if (availableProducts.containsKey(item) && availableProducts.get(item) > 0) {
+            availableProducts.put(item, availableProducts.get(item) - 1);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Map<WebShopItem, Integer> getAvailableProducts() {
+        return availableProducts;
     }
 }

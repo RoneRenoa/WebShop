@@ -2,7 +2,7 @@ package com.webshop.webshop.interfaces;
 
 import com.webshop.webshop.Order;
 
-import java.util.List;
+import java.util.Map;
 
 public interface Cart {
     public void addProductToCart(WebShopItem product);
@@ -11,5 +11,5 @@ public interface Cart {
 
     public Order pay(int userId);
 
-    public List<WebShopItem> viewCart();
+    public Map<WebShopItem, Integer> viewCart();
 }

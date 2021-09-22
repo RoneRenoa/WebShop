@@ -8,6 +8,7 @@ import com.webshop.webshop.interfaces.Command;
 import com.webshop.webshop.interfaces.WebShopItem;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -102,11 +103,11 @@ public class UserInterface {
         System.out.println("Érvénytelen parancs");
     }
 
-    public void showProducts(List<WebShopItem> availableProducts) {
+    public void showProducts(Map<WebShopItem,Integer> availableProducts) {
         System.out.println("A sorszámot beírva választhat elérhető termékeink közül:\n");
         int i = 1;
-        for (WebShopItem item : availableProducts) {
-            System.out.println(i + ".\t" + item);
+        for (Map.Entry<WebShopItem, Integer> item : availableProducts.entrySet()) {
+            System.out.println(i + ".\t" + item.getKey() + " Ft\t" + item.getValue() + " db van készleten.");
             i++;
         }
         System.out.println(i + ".\tVissza");
@@ -116,13 +117,13 @@ public class UserInterface {
         System.out.println(name + " hozzáadva a kosarához");
     }
 
-    public void showMyCart(List<WebShopItem> viewCart) {
+    public void showMyCart(Map<WebShopItem, Integer> viewCart) {
         StringBuilder myPurchases = new StringBuilder();
         myPurchases.append("A termék sorszámával tudja azt törölni a kosárból\n");
         myPurchases.append("A kosár tartalma:\n");
         int i = 1;
-        for (WebShopItem item : viewCart) {
-            myPurchases.append(i + ". " + item + "\n");
+        for (Map.Entry<WebShopItem, Integer> item : viewCart.entrySet()) {
+            myPurchases.append(i + ". " + item.getKey() + ": " + item.getValue() + " db\n");
             i++;
         }
         myPurchases.append(i + ". Vissza");
@@ -148,9 +149,10 @@ public class UserInterface {
         for (Order order : history) {
             i++;
             System.out.println(i + ". rendelés");
-            for (WebShopItem item : order.getPreviousProducts()) {
-                System.out.println(item.getName());
-            }
+            System.out.println(order);
+//            for (String item : order.getPreviousProducts()) {
+//                System.out.println(item.getName());
+//            }
             System.out.println();
         }
         System.out.println((i + 1) + ". Vissza");

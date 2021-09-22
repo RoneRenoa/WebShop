@@ -3,21 +3,30 @@ package com.webshop.webshop;
 import com.webshop.webshop.interfaces.Cart;
 import com.webshop.webshop.interfaces.WebShopItem;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ShoppingCart implements Cart {
-    private List<WebShopItem> shoppingCart = new ArrayList<>();
+    private Map<WebShopItem, Integer> shoppingCart = new LinkedHashMap<>();
 
     @Override
     public void addProductToCart(WebShopItem product) {
-        shoppingCart.add(product);
+        if (shoppingCart.containsKey(product)) {
+            shoppingCart.put(product, shoppingCart.get(product) + 1);
+        } else {
+            shoppingCart.put(product, 1);
+        }
     }
 
     @Override
     public void removeProductFromCart(WebShopItem product) {
-        shoppingCart.remove(product);
+        if (shoppingCart.containsKey(product)) {
+            if (shoppingCart.get(product) - 1 <= 0) {
+                shoppingCart.remove(product);
+            } else {
+                shoppingCart.put(product, shoppingCart.get(product) - 1);
+            }
+        }
     }
 
     @Override
@@ -28,7 +37,7 @@ public class ShoppingCart implements Cart {
     }
 
     @Override
-    public List<WebShopItem> viewCart() {
-        return Collections.unmodifiableList(shoppingCart);
+    public Map<WebShopItem, Integer> viewCart() {
+        return shoppingCart;
     }
 }
