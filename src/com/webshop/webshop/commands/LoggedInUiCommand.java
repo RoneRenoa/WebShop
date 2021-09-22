@@ -20,10 +20,10 @@ public class LoggedInUiCommand implements Command {
         String command = scanner.nextLine();
         switch (command.toLowerCase()) {
             case "1":
-                loggedMainPageCommand = LoggedMainPageCommand.CART;
+                loggedMainPageCommand = LoggedMainPageCommand.PRODUCTS;
                 break;
             case "2":
-                loggedMainPageCommand = LoggedMainPageCommand.PRODUCTS;
+                loggedMainPageCommand = LoggedMainPageCommand.CART;
                 break;
             case "3":
                 loggedMainPageCommand = LoggedMainPageCommand.PAY;
