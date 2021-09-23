@@ -2,12 +2,14 @@ package com.webshop.webshop;
 
 import com.webshop.webshop.interfaces.WebShopItem;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Order {
     private Map<WebShopItem, Integer> previousProducts = new LinkedHashMap<>();
     private int userId;
+    private int orderId;
 
     public Map<WebShopItem, Integer> getPreviousProducts() {
         return previousProducts;

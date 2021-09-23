@@ -1,6 +1,7 @@
 package com.webshop;
 
 import com.webshop.dataloader.ProductLoaderFromFile;
+import com.webshop.dataloader.UserLoadFromFile;
 import com.webshop.webshop.Order;
 import com.webshop.webshop.Product;
 import com.webshop.webshop.User;
@@ -18,7 +19,8 @@ class WebShopTest {
 
     @BeforeEach
     void setUp() {
-        webshop = new WebShop(new ProductLoaderFromFile("products.txt").loadData());
+        webshop = new WebShop(new ProductLoaderFromFile("products.txt").loadData()
+                , new UserLoadFromFile("users.txt").load());
     }
 
     @Test

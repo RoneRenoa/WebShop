@@ -1,8 +1,6 @@
 package com.webshop;
 
-import com.webshop.dataloader.ProductLoaderFromFile;
-import com.webshop.dataloader.ProductSaveToFile;
-import com.webshop.dataloader.UserSaveToFile;
+import com.webshop.dataloader.*;
 import com.webshop.dataloader.exceptions.SelectedMenuItemException;
 import com.webshop.dataloader.interfaces.LoadProduct;
 import com.webshop.dataloader.interfaces.SaveProduct;
@@ -29,12 +27,8 @@ public class WebShopEngine {
 
     public WebShopEngine() {
         LoadProduct dataLoader = new ProductLoaderFromFile(PRODUCTS_DATA_PATH);
-        webShop = new WebShop(dataLoader.loadData());
-    }
-
-    private void saveProducts(Map<WebShopItem, Integer> items){
-        SaveProduct dataSaver = new ProductSaveToFile(PRODUCTS_DATA_PATH);
-        dataSaver.saveData(items);
+        UserLoadFromFile userLoader = new UserLoadFromFile(USERS_DATA_PATH);
+        webShop = new WebShop(dataLoader.loadData(), userLoader.load());
     }
 
     public void run() {
@@ -103,8 +97,9 @@ public class WebShopEngine {
     private void pay() {
         if (!webShop.getLoggedUserByName(actuallyUser.getName()).getCart().viewCart().isEmpty()) {
             userInterface.payAndOrder();
-            webShop.pay(actuallyUser.getName());
+            Order order = webShop.pay(actuallyUser.getName());
             saveProducts(webShop.getAvailableProducts());
+            saveHistory(order);
         } else {
             userInterface.cartIsEmpty();
         }
@@ -232,5 +227,15 @@ public class WebShopEngine {
             }
         }
         return null;
+    }
+
+    private void saveProducts(Map<WebShopItem, Integer> items){
+        SaveProduct dataSaver = new ProductSaveToFile(PRODUCTS_DATA_PATH);
+        dataSaver.saveData(items);
+    }
+
+    private void saveHistory(Order order){
+        OrderSave orderSave = new OrderSave();
+        orderSave.saveOrder(order);
     }
 }

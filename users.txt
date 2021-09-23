@@ -1,1 +1,4 @@
+1;Magua
 2;Béla
+3;NemBéla
+4;b

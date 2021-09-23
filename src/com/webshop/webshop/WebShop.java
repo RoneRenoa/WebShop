@@ -5,13 +5,14 @@ import com.webshop.webshop.interfaces.WebShopItem;
 import java.util.*;
 
 public class WebShop {
-    private final Set<User> registeredUsers = new HashSet<>();
+    private final Set<User> registeredUsers;
     private final Set<User> loginUser = new HashSet<>();
     private final Map<WebShopItem, Integer> availableProducts;
     private final List<Order> orders = new ArrayList<>();
 
-    public WebShop(Map<WebShopItem, Integer> availableProducts) {
+    public WebShop(Map<WebShopItem, Integer> availableProducts, Set<User> users) {
         this.availableProducts = availableProducts;
+        this.registeredUsers = users;
     }
 
     public boolean registerUser(String name) {
@@ -94,12 +95,14 @@ public class WebShop {
         return userPreviousOrders;
     }
 
-    public void pay(String name) {
+    public Order pay(String name) {
         User user = getLoggedUserByName(name);
+        Order order = null;
         if (user != null) {
-            Order order = user.getCart().pay(user.getUserId());
+            order = user.getCart().pay(user.getUserId());
             orders.add(order);
         }
+        return order;
     }
 
     public boolean removeItemFromCustomerCart(WebShopItem item) {
